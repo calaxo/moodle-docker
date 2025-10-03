@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   moodle:
-    build: .
+    image: ghcr.io/calaxo/moodle-docker:latest
     container_name: moodle
     ports:
       - "8080:80"
