@@ -12,6 +12,10 @@ jobs:
     env:
       IMAGE_NAME: ghcr.io/calaxo/moodle-docker:latest
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       # 1. Checkout le repo
       - name: Checkout repository
