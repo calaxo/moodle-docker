@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  moodle:
+    build: .
+    container_name: moodle
+    ports:
+      - "8080:80"
+    environment:
+      DB_HOST: db
+      DB_NAME: moodle
+      DB_USER: moodle
+      DB_PASS: moodle
+      MOODLE_URL: http://localhost:8080
+      MOODLE_DATA_DIR: /var/www/moodledata
+      MOODLE_CLUSTER_DIR: /var/www/toreplicate
+    volumes:
+      - moodledata:/var/www/moodledata
+      - toreplicate:/var/www/toreplicate
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.6
+    container_name: moodle-db
+    environment:
+      MYSQL_DATABASE: moodle
+      MYSQL_USER: moodle
+      MYSQL_PASSWORD: moodle
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes:
+      - dbdata:/var/lib/mysql
+
+volumes:
+  moodledata:
+  toreplicate:
+  dbdata:
