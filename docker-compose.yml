@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   moodle:
     image: ghcr.io/calaxo/moodle-docker:latest
@@ -6,6 +5,8 @@ services:
     ports:
       - "8080:80"
     environment:
+      # mysqli or mariadb or pgsql or auroramysql or sqlsrv
+      DB_TYPE: mariadb
       DB_HOST: db
       DB_NAME: moodle
       DB_USER: moodle

@@ -13,7 +13,7 @@ if [ ! -f "$CONFIG_FILE" ]; then
     cp "$DIST_FILE" "$CONFIG_FILE"
 
     # Config DB
-    sed -i "s|^\$CFG->dbtype.*|\$CFG->dbtype    = 'mysqli';|" $CONFIG_FILE
+    sed -i "s|^\$CFG->dbtype.*|\$CFG->dbtype    = '${DB_TYPE}';|" $CONFIG_FILE
     sed -i "s|^\$CFG->dblibrary.*|\$CFG->dblibrary = 'native';|" $CONFIG_FILE
     sed -i "s|^\$CFG->dbhost.*|\$CFG->dbhost    = '${DB_HOST}';|" $CONFIG_FILE
     sed -i "s|^\$CFG->dbname.*|\$CFG->dbname    = '${DB_NAME}';|" $CONFIG_FILE
