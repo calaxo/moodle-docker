@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: ghcr.io/<TON_USER>/<REPO_MOODLE>:latest
+      IMAGE_NAME: ghcr.io/calaxo/moodle-docker:latest
 
     steps:
       # 1. Checkout le repo
