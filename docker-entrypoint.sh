@@ -36,13 +36,8 @@ if [ ! -f "$CONFIG_FILE" ]; then
     sed -i "$ a\$CFG->backuptempdir  = '${CLUSTER_DIR}/backuptemp';" $CONFIG_FILE
 
     # Ajout de la configuration pour le reverse proxy
-    if [ "$MOODLE_REVERSE_PROXY" = true ]; then
-        sed -i "$ a\$CFG->reverseproxy = true;" $CONFIG_FILE
-        echo ">> Reverse proxy activé dans config.php"
-    else
-        sed -i "$ a\$CFG->reverseproxy = false;" $CONFIG_FILE
-        echo ">> Reverse proxy désactivé dans config.php"
-    fi
+    sed -i "$ a\$CFG->reverseproxy = ${MOODLE_REVERSE_PROXY};" $CONFIG_FILE
+    echo ">> Reverse proxy : $MOODLE_REVERSE_PROXY dans config.php"
 
     echo ">> config.php généré avec succès"
 fi
