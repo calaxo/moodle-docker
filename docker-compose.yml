@@ -11,17 +11,27 @@ services:
       DB_NAME: moodle
       DB_USER: moodle
       DB_PASS: moodle
+      START_MOODLE_SERVER: "true"
+      # to launch or not moodle to make database migration before if needed
       MOODLE_URL: http://localhost:8080
       MOODLE_DATA_DIR: /var/www/moodledata
       MOODLE_CLUSTER_DIR: /var/www/toreplicate
+      MOODLE_REVERSE_PROXY: "true"
+
     volumes:
       - moodledata:/var/www/moodledata
       - toreplicate:/var/www/toreplicate
     depends_on:
       - db
+    healthcheck:
+      test: ["CMD", "php", "/var/www/html/admin/cli/checks.php"]
+      interval: 30s # Vérifie toutes les 30 secondes
+      timeout: 10s # Timeout de la commande
+      retries: 3 # Déclaré "unhealthy" après 3 échecs
+      start_period: 60s # Laisse 1 min avant de commencer les checks
 
   db:
-    image: mariadb:10.6
+    image: mariadb:latest
     container_name: moodle-db
     environment:
       MYSQL_DATABASE: moodle
@@ -30,6 +40,16 @@ services:
       MYSQL_ROOT_PASSWORD: rootpass
     volumes:
       - dbdata:/var/lib/mysql
+
+  backexp:
+    image: ghcr.io/calaxo/moodle-backup:latest
+    container_name: moodle-backup
+    environment:
+      BACKUP_DIR: /var/www/moodledata/backups
+    volumes:
+      - moodledata:/var/www/moodledata
+    depends_on:
+      - moodle
 
 volumes:
   moodledata:

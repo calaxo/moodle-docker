@@ -7,6 +7,7 @@ DIST_FILE=/var/www/html/config-dist.php
 # Variables d'environnement avec defaults
 MOODLE_DATA_DIR=${MOODLE_DATA_DIR:-/var/www/moodledata}
 CLUSTER_DIR=${MOODLE_CLUSTER_DIR:-/var/www/toreplicate}
+START_MOODLE_SERVER=${START_MOODLE_SERVER:-true}
 
 if [ ! -f "$CONFIG_FILE" ]; then
     echo ">> Génération de config.php depuis config-dist.php"
@@ -34,7 +35,23 @@ if [ ! -f "$CONFIG_FILE" ]; then
     sed -i "$ a\$CFG->cachedir       = '${CLUSTER_DIR}/cache';" $CONFIG_FILE
     sed -i "$ a\$CFG->backuptempdir  = '${CLUSTER_DIR}/backuptemp';" $CONFIG_FILE
 
+    # Ajout de la configuration pour le reverse proxy
+    if [ "$MOODLE_REVERSE_PROXY" = "true" ]; then
+        sed -i "$ a\$CFG->reverseproxy = true;" $CONFIG_FILE
+        echo ">> Reverse proxy activé dans config.php"
+    else
+        sed -i "$ a\$CFG->reverseproxy = false;" $CONFIG_FILE
+        echo ">> Reverse proxy désactivé dans config.php"
+    fi
+
     echo ">> config.php généré avec succès"
 fi
 
-exec "$@"
+# Démarrage conditionnel du serveur
+if [ "$START_MOODLE_SERVER" = "true" ]; then
+    echo ">> Démarrage du serveur Moodle"
+    exec apache2-foreground
+else
+    echo ">> START_MOODLE_SERVER=false : le serveur Moodle ne démarre pas"
+    exec sleep infinity
+fi

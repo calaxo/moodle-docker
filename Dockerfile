@@ -32,6 +32,12 @@ RUN echo "max_input_vars = 5000" > /usr/local/etc/php/conf.d/moodle.ini \
     && echo "upload_max_filesize = 100M" >> /usr/local/etc/php/conf.d/moodle.ini \
     && echo "post_max_size = 100M" >> /usr/local/etc/php/conf.d/moodle.ini
 
+# Configurer le cron job
+RUN echo "* * * * * www-data php /var/www/html/admin/cli/cron.php >/dev/null 2>&1" \
+    > /etc/cron.d/moodle-cron \
+    && chmod 0644 /etc/cron.d/moodle-cron \
+    && crontab -u www-data /etc/cron.d/moodle-cron
+
 # Copier le script d'entrypoint
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
