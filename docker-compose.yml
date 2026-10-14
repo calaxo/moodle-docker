@@ -6,14 +6,14 @@ services:
       - "8080:80"
     environment:
       # mysqli or mariadb or pgsql or auroramysql or sqlsrv
-      DB_TYPE: mariadb
+      DB_TYPE: ${DB_TYPE:-mariadb}
       DB_HOST: db
-      DB_NAME: moodle
-      DB_USER: moodle
-      DB_PASS: moodle
+      DB_NAME: ${DB_NAME:-moodle}
+      DB_USER: ${DB_USER:-moodle}
+      DB_PASS: ${DB_PASS:-moodle}
       START_MOODLE_SERVER: "true"
       # to launch or not moodle to make database migration before if needed
-      MOODLE_URL: http://localhost:8080
+      MOODLE_URL: ${MOODLE_URL:-http://localhost:8080}
       MOODLE_DATA_DIR: /var/www/moodledata
       MOODLE_CLUSTER_DIR: /var/www/toreplicate
       MOODLE_REVERSE_PROXY: "true"
@@ -34,10 +34,10 @@ services:
     image: mariadb:latest
     container_name: moodle-db
     environment:
-      MYSQL_DATABASE: moodle
-      MYSQL_USER: moodle
-      MYSQL_PASSWORD: moodle
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: ${DB_NAME:-moodle}
+      MYSQL_USER: ${DB_USER:-moodle}
+      MYSQL_PASSWORD: ${DB_PASS:-moodle}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:-rootpass}
     volumes:
       - dbdata:/var/lib/mysql
 
