@@ -41,8 +41,11 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
 
+  # Optional backup service (separate image, not part of this repository).
+  # Only started with: docker compose --profile backup up -d
   backexp:
     image: ghcr.io/calaxo/moodle-backup:latest
+    profiles: ["backup"]
     container_name: moodle-backup
     environment:
       BACKUP_DIR: /var/www/moodledata/backups

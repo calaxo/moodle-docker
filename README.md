@@ -29,8 +29,20 @@ docker compose up -d
 Moodle is then available at <http://localhost:8080>. The Compose file serves plain HTTP;
 put a reverse proxy in front of it for HTTPS.
 
-The `backexp` service in `docker-compose.yml` uses a separate backup image that is not part of
-this repository; remove that service if you don't have it.
+### Optional backup service
+
+`docker-compose.yml` also declares a `backexp` service (`ghcr.io/calaxo/moodle-backup:latest`).
+It mounts the `moodledata` volume and writes Moodle backups to `/var/www/moodledata/backups`
+(`BACKUP_DIR`). Its image is private and not part of this repository, so the service sits behind
+the `backup` Compose profile: a plain `docker compose up -d` starts only Moodle and MariaDB.
+
+If you have access to that image (or replace it with your own), start it with:
+
+```bash
+docker compose --profile backup up -d
+# or set it once, e.g. in .env or in your deployment tool:
+COMPOSE_PROFILES=backup
+```
 
 ## Configuration
 
